@@ -1,0 +1,8 @@
+.loader-img{
+    background: transparent;
+    align-items: center;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    z-index: 1500;
+}

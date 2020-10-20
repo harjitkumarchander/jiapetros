@@ -1,0 +1,44 @@
+/* .add_customer_btn{ */
+    /* display: flex; */
+    /* justify-content: flex-end; */
+    /* position: absolute; */
+    /* right: 100px; */
+    /* float: right; */
+/* } */
+.customers_main{
+    width : 85%;
+    margin-left: 230px;
+}
+.get_customers_main{
+    width : 100%;
+}
+.customers_col{
+    width : 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    scroll-behavior: none;
+}
+.sidebar_btn{
+    font-size: 20px;
+    padding: -15px;
+}
+#customer{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.customers_table{
+    scroll-behavior: none;
+    overflow-y: hidden;
+}
+.sales_table{
+    scroll-behavior: none;
+    overflow-y: hidden;
+}
+.customer.fliph {
+    margin-left : -180px;
+    transition: all 0.5s  ease-in-out;
+}
+#labelBefore:before{
+    content:"*" ;
+    color:red   
+    }

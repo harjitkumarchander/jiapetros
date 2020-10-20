@@ -1,0 +1,9 @@
+.footer_page{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+    background-color: #3c8dbc;
+}
