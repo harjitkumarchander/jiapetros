@@ -50,7 +50,7 @@ class GetSingleAccount extends Component {
       this.setState({
           ledger : this.state.ledgers
       })
-      console.log(this.state.ledgers)
+    //   console.log(this.state.ledgers)
     }
 
     custOpening = () => {
@@ -126,7 +126,7 @@ class GetSingleAccount extends Component {
         })
         .then((res)=>res.json())
         .then(res=>{
-            console.log(res)
+            // console.log(res)
             this.setState({
                 details : res.data
             },()=>{this.toggleLoader()

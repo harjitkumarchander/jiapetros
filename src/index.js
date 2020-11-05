@@ -14,6 +14,8 @@ import Accounts from './components/Accounts';
 import CustomersItem from './components/CustomersItem';
 import GetSingleAccount from './components/GetSingleAccount';
 import ChangePassword from './components/ChangePassword';
+import ProfilePage from './components/ProfilePage';
+import MyPdfBill from './components/MyPdfBill';
 
 ReactDOM.render(
   // <React.StrictMode>
@@ -30,6 +32,8 @@ ReactDOM.render(
         <Route path="/accounts" component={Accounts} />
         <Route path="/getsingleaccount" component={GetSingleAccount} />
         <Route path="/changepassword" component={ChangePassword} />
+        <Route path="/profilepage" component={ProfilePage} />
+        <Route path="/mypdfbill" component={MyPdfBill} />
       </Switch>
     </Router>
 // </React.StrictMode>

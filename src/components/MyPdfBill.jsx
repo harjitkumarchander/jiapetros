@@ -99,40 +99,37 @@ total: {
 },
 });
 
-class BillTo extends Component{
+class MyPdfBill extends Component{
   constructor(props){
     super(props);
     this.state = {
       date : new Date(),
-      access_token : localStorage.getItem('userData'),
-      billPdfData : []
+      DateFilterData : []
     }
   }
 
   componentDidMount(){
-    let ApiUrl = 'http://18.191.185.248/api/order/get/pdfs';
-    fetch(ApiUrl,{
-      method : 'POST',
-      body : JSON.stringify(this.state)
-    })
-    .then((res)=>res.json())
-    .then(result=>{
-      console.log(result);
-      this.setState({
-          billPdfData : result.data
-      })
-    })
-    .catch((error)=>{
-        console.log('error', error);
-    })
+        let dateFilter = [];
+        let newStartDate = new Date(this.props.customerStartDate)
+        let newEndDate = new Date(this.props.customerEndDate)
+        this.props.orders.map((v,i)=>{
+          let  billdate = new Date(v.created_on);
+          if(newStartDate < billdate && newEndDate > billdate){
+              dateFilter.push(v)
+              } 
+              this.setState({
+                  DateFilterData : dateFilter
+              })
+              // console.log(DateFilterData)
+        })
   }
 
   render(){
-    let billNo  = this.state.billPdfData.map((v,i)=>v.id[+1])
-    let startDate=new Date(this.props.startDate)
-    let endDate=new Date(this.props.endDate)
-    let dt = this.state.date;
-    const total = this.props.dateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
+    let ProductName = this.props.customerProductName.map((v,i)=>v.name)
+    let billDate = new Date(this.props.customerBillCreateDate)
+    let customerBillStartDate = new Date(this.props.customerStartDate)
+    let customerBillEndDate = new Date(this.props.customerEndDate)
+    const total = this.state.DateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
     return(
   <Document>
     <Page size="A4" style={{ margin : '10', paddingBottom : 30, paddingTop : 30  }}>
@@ -153,28 +150,28 @@ class BillTo extends Component{
       </View>
 
       <View style={{ flexDirection :'row', alignItems : 'center', height : '20', fontSize : '13'}}>
-        <Text style={{ width : '30%', textAlign : 'left', marginBottom : '60'}}>Bill No. {billNo}</Text>
-        <Text style={{ width : '63%', textAlign : 'right', marginBottom : '60'}}>Date:{dt.getDate()+"/"+ (dt.getMonth()+1) +"/"+ dt.getFullYear()} </Text>
+        <Text style={{ width : '30%', textAlign : 'left', marginBottom : '60'}}>Bill No. {this.props.customerBillNo}</Text>
+        <Text style={{ width : '63%', textAlign : 'right', marginBottom : '60'}}>Date:{billDate.getDate()+"/"+ (billDate.getMonth()+1) +"/"+ billDate.getFullYear()} </Text>
       </View>
              
 
       <View style={{ alignItems : 'center', height : '20', flexDirection : 'row'}}>
         <Text style={{ width : '30%', textAlign : 'left', fontSize : '20', marginBottom : '60'}}>Bill To</Text>
-        <Text style={{ width : '40%', textAlign : 'center', fontSize : '20', marginBottom : '60'}}>{this.props.name}</Text>
+        <Text style={{ width : '40%', textAlign : 'center', fontSize : '20', marginBottom : '60'}}>{this.props.customerName}</Text>
       </View>
 
       <View style={{ alignItems : 'center', height : '20', flexDirection : 'row'}}>
-        <Text style={{ width : '100%', textAlign : 'center', fontSize : '15', marginBottom : '60'}}>{this.props.address}</Text>
+        <Text style={{ width : '100%', textAlign : 'center', fontSize : '15', marginBottom : '60'}}>{this.props.customerAddress}</Text>
       </View>
 
       <View style={{ alignItems : 'center', height : '20', flexDirection : 'row'}}>
-        <Text style={{ width : '100%', textAlign : 'center', fontSize : '15', marginBottom : '60'}}>GST NO : {this.props.gst_no}</Text>
+        <Text style={{ width : '100%', textAlign : 'center', fontSize : '15', marginBottom : '60'}}>GST NO : {this.props.customerGstNo}</Text>
       </View>
 
       <View style={{ flexDirection :'row', alignItems : 'center', height : '20', fontSize : '13', marginTop : '10'}}>
-        <Text style={{ width : '30%', textAlign : 'center', marginLeft : '100', marginBottom : '60'}}>{startDate.getDate()+"/"+ (startDate.getMonth()+1) +"/"+ startDate.getFullYear()}</Text>
+        <Text style={{ width : '30%', textAlign : 'center', marginLeft : '100', marginBottom : '60'}}>{customerBillStartDate.getDate()+"/"+ (customerBillStartDate.getMonth()+1) +"/"+ customerBillStartDate.getFullYear()}</Text>
         <Text style={{marginBottom : '60'}}>To</Text>
-        <Text style={{width : '30%', textAlign : 'center', marginRight : '150', marginBottom : '60'}}>{endDate.getDate()+"/"+ (endDate.getMonth()+1) +"/"+ endDate.getFullYear()} </Text>
+        <Text style={{ width : '30%', textAlign : 'center', marginRight : '150', marginBottom : '60'}}>To {customerBillEndDate.getDate()+"/"+ (customerBillEndDate.getMonth()+1) +"/"+ customerBillEndDate.getFullYear()}</Text>
       </View>
       
       <View style={styles.table}>
@@ -188,13 +185,13 @@ class BillTo extends Component{
         <Text style={styles.total}>Total</Text>
       </View>
           {
-            this.props.dateFilterData.map((order,index)=>{
+            this.state.DateFilterData.map((order,index)=>{
               
               let d = new Date(order.created_on)
               return(
                 <View style={{flexDirection: 'row', fontSize : 8, borderBottomColor: '#bff0fd', borderBottomWidth: 1, alignItems: 'center', height: 24, fontStyle: 'bold',}} key={index} >
                   <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{d.getDate()+"/"+ (d.getMonth()+1) +"/"+ d.getFullYear()}</Text>
-                  <Text style={{width: '20%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{this.props.productName[order.product_id-1]}</Text>
+                  <Text style={{width: '20%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{ProductName[order.product_id-1]}</Text>
                   <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.vehicle_no}</Text>
                   <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.slip_no}</Text>
                   <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.quantity}</Text>
@@ -221,4 +218,4 @@ class BillTo extends Component{
     );
   }
 } 
-export default BillTo;
+export default MyPdfBill;

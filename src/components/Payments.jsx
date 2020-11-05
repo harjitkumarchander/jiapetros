@@ -81,12 +81,12 @@ class Payments extends Component {
                 user2 : tempArr
             })
         })
-            .catch((error)=>{
-                console.log('error', error);
-            })
+        .catch((error)=>{
+            console.log('Error while fetching', error);
+        })
     }
          
-        handleIdSearch = (e) => {
+    handleIdSearch = (e) => {
         let user2 = [];
             for(const obj of this.state.user1){
         let customerId = obj.id
@@ -99,7 +99,7 @@ class Payments extends Component {
     console.log(user2)
     this.setState({
         user2,
-        customer_id : e.target.value
+        customer_id : e.target.value,
     })
     }
 
@@ -149,7 +149,12 @@ class Payments extends Component {
         : null
     }
 
+    searchIdClick = () => {
+        console.log("hello");
+   }
+
     render() {
+        // let custId = this.state.user2.map((v,i)=>v.id)
         return (
             <div className="payment">
                 <Topbar />
@@ -178,9 +183,9 @@ class Payments extends Component {
                             <div className="container p-0 col-md-8 col-sm-12 searchlistcontainer">
                                { this.state.user2.map((v,i)=>{
                                     return(
-                                        <ul key={i} className="list-group" id="selectList" >
+                                        <ul key={i} className="list-group" id="selectList">
                                           <div className="row">
-                                            <li className="list-group-item p-0 d-flex" >
+                                            <li className="list-group-item p-0 d-flex" onClick={this.searchIdClick} >
                                                 <p className="ml-4 text-left">{v.id}</p>
                                                 <p className="ml-2 text-center">{v.name}</p>
                                                 <p className="ml-2 text-right">{v.address}</p>

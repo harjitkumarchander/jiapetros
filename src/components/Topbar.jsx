@@ -60,8 +60,8 @@ class Topbar extends Component {
                                 <span className="hidden-xs"><i className="fa fa-user display-5"></i></span>
                             </a>
                               <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <button className="dropdown-item" type="button">Profile</button>
-                                <Link to="/changepassword"><button className="dropdown-item" type="button">Change Password</button></Link>
+                                <Link to="/profilepage" style={{textDecoration : "none"}}><button className="dropdown-item" type="button">Profile</button></Link>
+                                <Link to="/changepassword" style={{textDecoration : "none"}}><button className="dropdown-item" type="button">Change Password</button></Link>
                                 <button className="dropdown-item" type="button" onClick={this.handleLogout}>Logout</button>
                               </div>
                         </div>

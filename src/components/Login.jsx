@@ -26,10 +26,10 @@ class Login extends Component {
 		if(username && password){
 		PostData('login',this.state)
     	.then(result=>{
-		   console.log(result)
+		//    console.log(result)
 		   let responseData = result
     	     if(responseData.data){
-    	         localStorage.setItem('userData', responseData.data.access_token)
+				 localStorage.setItem('userData', responseData.data.access_token)
     	         this.setState({
     	             loggedIn : true
     	         },()=>this.toggleLoader())

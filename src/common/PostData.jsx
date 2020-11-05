@@ -8,7 +8,7 @@ export function PostData(type, userData){
         })
         .then((res)=>res.json())
         .then((responseJson)=>{
-            console.log(responseJson);
+            // console.log(responseJson);
             resolve(responseJson)
         })
         .catch((error)=>{

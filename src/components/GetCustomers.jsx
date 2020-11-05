@@ -92,7 +92,7 @@ class NewTable extends Component {
             })
             .then((res)=>res.json())
             .then(res=>{
-                console.log(res)
+                // console.log(res)
                 this.setState({
                     items : res.data
                 },()=>{this.toggleLoader()
@@ -113,7 +113,7 @@ class NewTable extends Component {
             })
             .then(res=>res.json())
             .then(result=>{
-                console.log(result)
+                // console.log(result)
                 this.setState({
                     products : result.data
                 })

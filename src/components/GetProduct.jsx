@@ -21,7 +21,7 @@ class GetProduct extends Component {
             name : '',
             description : '',
             image : '',
-            quanlity : '',
+            quantity : '',
             price : '',
             status : '',
             created_on : '',
@@ -69,7 +69,7 @@ class GetProduct extends Component {
             name : item.name,
             description : item.description,
             price : item.price,
-            quanlity : item.quanlity,
+            quantity : item.quantity,
             category_id: item.category_id,
             show : true
         })
@@ -89,7 +89,7 @@ class GetProduct extends Component {
         })
         .then(res=>res.json())
         .then(result=>{
-            console.log(result)
+            // console.log(result)
             this.setState({
                 items : result.data
             },()=>{this.toggleLoader()
@@ -106,7 +106,7 @@ class GetProduct extends Component {
             body : JSON.stringify({name : this.state.name,
                                    price : this.state.price, 
                                    product_id : this.state.product_id, 
-                                   quanlity : this.state.quanlity,
+                                   quantity : this.state.quantity,
                                    description : this.state.description,
                                    access_token : this.state.access_token
                                 })
@@ -135,7 +135,7 @@ class GetProduct extends Component {
 
                             className="pl-0 pr-0"
                             // title={"Employee List"}
-                            data={items.map((item,i) => {return [item.id,item.name,item.quanlity,item.price,
+                            data={items.map((item,i) => {return [item.id,item.name,item.quantity,item.price,
                                     <li className="row ml-0 mr-5 action-btn">
                                         <button className="btn btn-light bg-transparent" onClick={()=>this.handleEditShow(item,item.id)}><i className="col fa fa-edit"></i></button>
                                         {/* <button className="btn btn-light bg-transparent"><i className="col fa fa-trash" aria-hidden="true"></i></button> */}
@@ -165,7 +165,7 @@ class GetProduct extends Component {
                             <div className="form-group col-md-6">
                             <label style={{fontSize : 20}}>Quantity</label>
                             <InputGroup>
-                            <input className="form-control" type="text" name="quanlity" value={this.state.quanlity} placeholder="Quantity" onChange={this.handleChange}/>
+                            <input className="form-control" type="text" name="quanlity" value={this.state.quantity} placeholder="Quantity" onChange={this.handleChange}/>
                             </InputGroup>
                             </div>
                             <div className="form-group col-md-6">

@@ -6,29 +6,12 @@ class Home extends Component {
     constructor(){
         super();
         this.state = {
-            loggedIn : false,
             access_token : localStorage.getItem('userData')
         }
     }
 
-    componentDidMount(){
-    if(this.state.access_token){
-        console.log("Hello")
-    }else{
-        this.setState({
-            loggedIn : true
-        })
-    }    
-    }
-
-    componentWillUnmount(){
-        this.setState({
-            loggedIn : false
-        })
-    }
-
     render() {
-        if(this.state.loggedIn){
+        if(!this.state.access_token){
             return <Redirect to={'/'} />
         }
         return (

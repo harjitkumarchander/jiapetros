@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import converter from 'number-to-words';
 import { Page, Text, View, Document, Image, StyleSheet } from '@react-pdf/renderer';
 import logo from '../images/logo.png'
 
@@ -67,13 +68,13 @@ date: {
     borderRightColor: borderColor,
     borderRightWidth: 1
 },
-opening: {
-    width: '15%',
-    borderRightColor: borderColor,
-    borderRightWidth: 1,
+items: {
+  width: '20%',
+  borderRightColor: borderColor,
+  borderRightWidth: 1
 },
 vehicle: {
-    width: '20%',
+    width: '15%',
     borderRightColor: borderColor,
     borderRightWidth: 1,
 },
@@ -98,7 +99,7 @@ total: {
 },
 });
 
-class LedgerTo extends Component{
+class BillTo extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -107,16 +108,15 @@ class LedgerTo extends Component{
   }
 
   render(){
-      console.log(this.props);
     let dt = this.state.date;
-    
+    const total = this.props.dateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
     return(
   <Document>
-    <Page size="A4" style={{ margin : '10', paddingBottom : 35, paddingTop : 30 }}>
+    <Page size="A4" style={{ margin : '10', paddingBottom : 30, paddingTop : 30  }}>
        
       <View style={{ flexDirection :'row', alignItems : 'center', height : '20'}}>
         <Text style={{ width : '30%', fontSize : 12, textAlign : 'left'}}>GST No. 03ABTPD4264F1ZT</Text>
-        <Text style={{ width : '34%', fontSize : 12, textAlign : 'center'}}>ACCOUNT</Text>
+        <Text style={{ width : '34%', fontSize : 12, textAlign : 'center'}}>INVOICE</Text>
         <Text style={{ width : '30%', fontSize : 12, textAlign : 'right', marginRight : '20'}}>M: 9592000975</Text>
       </View>
 
@@ -129,13 +129,13 @@ class LedgerTo extends Component{
         <Text style={{ width : '90%', textAlign : 'center', fontSize : '12', marginBottom : '80'}}>Landran Banur Road, (Near Chandigarh Group Colleges), Mohali (Punjab)</Text>
       </View>
 
-      <View style={{ flexDirection :'row', alignItems : 'center', height : '20', fontSize : '15'}}>
-        <Text style={{ width : '30%', textAlign : 'left', marginBottom : '60'}}>Account Detail</Text>
+      <View style={{ flexDirection :'row', alignItems : 'center', height : '20', fontSize : '13'}}>
+        <Text style={{ width : '30%', textAlign : 'left', marginBottom : '60'}}>Bill No. *****</Text>
         <Text style={{ width : '63%', textAlign : 'right', marginBottom : '60'}}>Date:{dt.getDate()+"/"+ (dt.getMonth()+1) +"/"+ dt.getFullYear()} </Text>
       </View>
 
       <View style={{ alignItems : 'center', height : '20', flexDirection : 'row'}}>
-        <Text style={{ width : '30%', textAlign : 'left', fontSize : '20', marginBottom : '60'}}></Text>
+        <Text style={{ width : '30%', textAlign : 'left', fontSize : '20', marginBottom : '60'}}>Bill To</Text>
         <Text style={{ width : '40%', textAlign : 'center', fontSize : '20', marginBottom : '60'}}>{this.props.name}</Text>
       </View>
 
@@ -150,48 +150,45 @@ class LedgerTo extends Component{
       <View style={styles.table}>
       <View style={styles.container}>
         <Text style={styles.date}>Date</Text>
-        <Text style={styles.opening}>Opening</Text>
-        <Text style={styles.vehicle}>Description</Text>
-        <Text style={styles.slip}>Bill No</Text>
-        <Text style={styles.qty}>Sale</Text>
-        <Text style={styles.rate}>Payment</Text>
-        <Text style={styles.total}>Closing</Text>
-    </View>
+        <Text style={styles.items}>Items</Text>
+        <Text style={styles.vehicle}>Vehicle No</Text>
+        <Text style={styles.slip}>Slip No</Text>
+        <Text style={styles.qty}>Qty</Text>
+        <Text style={styles.rate}>@</Text>
+        <Text style={styles.total}>Total</Text>
+      </View>
           {
             this.props.dateFilterData.map((order,index)=>{
-                let d = new Date(order.created_on)
-              if(order.type === 'order'){
+              
+              let d = new Date(order.created_on)
+            //   console.log(d.getDate()+"/"+ (d.getMonth()+1) +"/"+ d.getFullYear())
               return(
                 <View style={{flexDirection: 'row', fontSize : 8, borderBottomColor: '#bff0fd', borderBottomWidth: 1, alignItems: 'center', height: 24, fontStyle: 'bold',}} key={index} >
                   <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{d.getDate()+"/"+ (d.getMonth()+1) +"/"+ d.getFullYear()}</Text>
-                  <Text style={{width: '15%', textAlign: 'right', paddingRight: 8,borderRightColor: '#000', borderRightWidth: 1 }}>{Number.parseFloat(order.openingBalance).toFixed(2)}</Text>
-                  <Text style={{width: '20%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>-</Text>
+                  <Text style={{width: '20%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{this.props.productName[order.product_id-1]}</Text>
+                  <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.vehicle_no}</Text>
                   <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.slip_no}</Text>
-                  <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.total}</Text>
-                  <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>-</Text>
-                  <Text style={{width: '10%', textAlign: 'right', paddingRight: 8 }}>{Number.parseFloat(order.closeBalance).toFixed(2)}</Text>
+                  <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.quantity}</Text>
+                  <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.price}</Text>
+                  <Text style={{width: '10%', textAlign: 'right', paddingRight: 8 }}>{order.total}</Text>
               </View>
               )
-              }else if(order.type === 'payment'){
-                  return(
-                <View style={{flexDirection: 'row', fontSize : 8, borderBottomColor: '#bff0fd', borderBottomWidth: 1, alignItems: 'center', height: 24, fontStyle: 'bold',}} key={index} >
-                  <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{d.getDate()+"/"+ (d.getMonth()+1) +"/"+ d.getFullYear()}</Text>
-                  <Text style={{width: '15%', textAlign: 'right', paddingRight: 8,borderRightColor: '#000', borderRightWidth: 1 }}>{Number.parseFloat(order.openingBalance).toFixed(2)}</Text>
-                  <Text style={{width: '20%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.description}</Text>
-                  <Text style={{width: '15%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>-</Text>
-                  <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>-</Text>
-                  <Text style={{width: '10%', textAlign: 'center', borderRightColor: '#000', borderRightWidth: 1, paddingRight : 2 }}>{order.amount}</Text>
-                  <Text style={{width: '10%', textAlign: 'right', paddingRight: 8 }}>{Number.parseFloat(order.closeBalance).toFixed(2)}</Text>
-                </View>
-                  );
-              }  
           })
         }
     </View>
 
-        <View style={{flexDirection : 'row', marginTop : '20', fontSize : 12}}>
-          <Text style={{ width: '60%', textAlign: 'left', marginLeft: '20' }}>Thanks for your Business</Text>
-          <Text style={{ width: '35%', textAlign: 'center' }}>For Jia Petros</Text>
+    {/* <View> */}
+
+          <View style={{flexDirection: 'row', borderBottomColor: '#bff0fd', borderBottomWidth: 1, alignItems: 'right', height: 24, fontSize: 10, fontStyle: 'bold',}}>
+            <Text style={{ width: '70%', textAlign: 'left', borderRightColor: borderColor, borderRightWidth: 1, paddingRight: 8,}} >{converter.toWords(total).toUpperCase()}</Text>
+            <Text style={{ width: '10%', textAlign: 'center', borderRightColor: borderColor, borderRightWidth: 1, paddingRight: 8,}} >TOTAL</Text>
+            <Text style={{width: '20%', textAlign: 'center', paddingRight: 8,}}>{ Number.parseFloat(total).toFixed(2)}</Text>            
+          </View>
+     
+    {/* </View> */}
+
+        <View>
+          <Text style={{ width: '80%', textAlign: 'right', fontSize : '12',marginTop : '20', marginRight: '20' }}>For Jia Petros</Text>
         </View>
 
     </Page>  
@@ -199,4 +196,4 @@ class LedgerTo extends Component{
     );
   }
 } 
-export default LedgerTo;
+export default BillTo;

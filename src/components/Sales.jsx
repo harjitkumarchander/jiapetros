@@ -74,7 +74,7 @@ class Sales extends Component {
         })
         .then((res)=>res.json())
         .then(res=>{
-            console.log(res);
+            // console.log(res);
             let tempArr = [];
             for(const obj of res.data) {
                 if(obj !== undefined) {
@@ -126,7 +126,7 @@ class Sales extends Component {
             user2.push(obj)
               }
             }
-            console.log(user2)
+            // console.log(user2)
             this.setState({
                 user2,
                 customer_id : e.target.value
@@ -143,7 +143,7 @@ class Sales extends Component {
             product2.push(obj)
               }
             }
-            console.log(product2)
+            // console.log(product2)
             this.setState({
                 product2,
                 product_id : e.target.value
@@ -160,7 +160,7 @@ class Sales extends Component {
          })
          .then((res)=>res.json())
          .then(result=>{
-             console.log(result)
+            //  console.log(result)
              this.setState({
                  show : false,
                  result : result.data
