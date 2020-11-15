@@ -83,7 +83,7 @@ class NewTable extends Component {
     //     })
     // }
 
-      getCustomers(){
+      getCustomers = () => {
         let baseUrl = 'http://18.191.185.248/api/customers';
     
             fetch(baseUrl,{
@@ -106,7 +106,7 @@ class NewTable extends Component {
             })
         }
 
-        getProducts(){
+        getProducts = () => {
             fetch("http://18.191.185.248/api/products",{
                 method : 'POST',
                 body : JSON.stringify(this.state)

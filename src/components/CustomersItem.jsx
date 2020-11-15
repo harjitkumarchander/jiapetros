@@ -26,6 +26,7 @@ class CustomersItem extends Component {
             orders : [],
             payments : [],
             pdfData : [],
+            DateFilterData : [],
             show : false,
             submitted : false,
             items : this.props.location.state,
@@ -33,7 +34,7 @@ class CustomersItem extends Component {
             sales :this.props.location.state,
             order_id : this.props.location.state.sales,
             payment :this.props.location.state,
-            user_id : this.props.location.state.payment,
+            user_id : this.props.location.state.payments,
             product :this.props.location.state,
             product_id : this.props.location.state.products,
         }
@@ -79,7 +80,7 @@ class CustomersItem extends Component {
         e.preventDefault()
     }
 
-    getSingleCustomer(){
+    getSingleCustomer = () => {
         let baseUrl = 'http://18.191.185.248/api/customer/details';
         fetch(baseUrl,{
             method  : 'POST',
@@ -98,7 +99,7 @@ class CustomersItem extends Component {
         })
     }
 
-    componentDidMount(){
+    componentDidMount = () => {
         this.getSingleOrder();
         this.getSinglePayment();
         this.getSingleCustomer();
@@ -106,7 +107,30 @@ class CustomersItem extends Component {
         this.getPdf();
     }
 
-    getSingleOrder(){
+    getFilterData = (pdf,ids) => {
+        let newStartDate = new Date(this.state.pdfData[ids].start_date)
+        let newEndDate = new Date(this.state.pdfData[ids].end_date)
+        let DateFilterData = [];
+        // let newStartDate = this.state.pdfData.map((v,i)=> new Date(v.start_date)[ids])
+        
+        // let newStartDate = this.state.pdfData.map((v,i)=> new Date(v.start_date)[ids])
+        // let newEndDate = this.state.pdfData.map((v,i)=> v.end_date[ids])
+        // console.log(newStartDate)
+        // console.log(ids);
+            this.state.orders.map((v,i)=>{   
+        let slipDate = new Date(v.created_on);
+        if(newStartDate < slipDate && newEndDate > slipDate){
+            DateFilterData.push(v)
+        }
+        })
+        this.setState({
+            DateFilterData : DateFilterData
+         })
+
+         console.log(DateFilterData)
+    }
+
+    getSingleOrder = () => {
         let baseUrl = 'http://18.191.185.248/api/orders';
         fetch(baseUrl,{
             method  : 'POST',
@@ -124,7 +148,7 @@ class CustomersItem extends Component {
         })
     }
 
-    getSinglePayment(){
+    getSinglePayment = () => {
         let baseUrl = 'http://18.191.185.248/api/payments';
         fetch(baseUrl,{
             method  : 'POST',
@@ -150,11 +174,11 @@ class CustomersItem extends Component {
         })
         .then((res)=>res.json())
         .then(result=>{
-        //   console.log(result);
+          console.log(result);
           this.setState({
             pdfData : result.data
-          })
-          })                
+            })
+        })                
         .catch((error)=>{
             console.log('error', error);
         })
@@ -202,6 +226,7 @@ class CustomersItem extends Component {
                                     productName={productName}
                                     orders={this.state.orders}
                                     customer_id={this.state.customer_id}
+                                    pdfData={this.state.pdfData}
                                 />
                             </div>
                            
@@ -218,9 +243,31 @@ class CustomersItem extends Component {
                               <div className="d-flex mt-2"><label className="col-sm-2">Created Date :</label><li className="list-group-item col-sm-10 rounded">{this.state.details.created_on}</li></div>
                             </ul>
                         </div>
-                        <h1 className="display-5 mt-5 d-none d-sm-block">Sale Details</h1>
+
+                        <h1 className="display-5 mt-5 d-none d-sm-block">Bill Details</h1>
                         <Loader loader={!this.state.loader} />
-                        
+                        <MUIDataTable 
+                        data={pdfData.map((pdf, i) => {return [pdf.created_on, 
+                                                          <PDFDownloadLink document={<MyPdfBill
+                                                            customerName={this.state.details.name}
+                                                            customerAddress={this.state.details.address}
+                                                            customerGstNo={this.state.details.gst_no}
+                                                            customerBillNo={pdf.id}
+                                                            customerBillCreateDate={pdf.created_on}
+                                                            customerStartDate={pdf.start_date}
+                                                            customerEndDate={pdf.end_date}
+                                                            customerProductName={this.state.products}
+                                                            orders={this.state.orders}
+                                                            DateFilterData={this.state.DateFilterData}
+                                                          />
+                                                        }
+                                                          ><button className="btn btn-secondary" onClick={()=>this.getFilterData(pdf,i)}>{pdf.id}</button>
+                                                          </PDFDownloadLink>, pdf.start_date, pdf.end_date, pdf.path ]})}
+                        columns={columns3}
+                        options={{selectableRows : "none"}}
+                        />
+
+                        <h1 className="display-5 mt-5 d-none d-sm-block">Sale Details</h1>                        
                         <MUIDataTable 
                         data={orders.map(sale => {return [sale.created_on, productName[sale.product_id-1], sale.slip_no, sale.quantity, sale.price, sale.total ]})}
                         columns={columns1}
@@ -234,28 +281,7 @@ class CustomersItem extends Component {
                         options={{selectableRows : "none"}}
                         />
 
-                        <h1 className="display-5 mt-5 d-none d-sm-block">Bill Details</h1>
-                        <MUIDataTable 
-                        data={pdfData.map(pdf => {return [pdf.created_on, 
-                                                          <PDFDownloadLink document={<MyPdfBill 
-                                                            pdfData={this.state.pdfData}
-                                                            orders={this.state.orders}
-                                                            customerName={this.state.details.name}
-                                                            customerAddress={this.state.details.address}
-                                                            customerGstNo={this.state.details.gst_no}
-                                                            customerBillNo={pdf.id}
-                                                            customerBillCreateDate={pdf.created_on}
-                                                            customerStartDate={pdf.start_date}
-                                                            customerEndDate={pdf.end_date}
-                                                            filterData={this.state.orders}
-                                                            customerProductName={this.state.products}
-                                                          />
-                                                        }
-                                                          >{pdf.id}
-                                                          </PDFDownloadLink>, pdf.start_date, pdf.end_date, pdf.path ]})}
-                        columns={columns3}
-                        options={{selectableRows : "none"}}
-                        />
+                        
                         </div>
                     </div>
                 </div>

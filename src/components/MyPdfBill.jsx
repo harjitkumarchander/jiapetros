@@ -104,32 +104,33 @@ class MyPdfBill extends Component{
     super(props);
     this.state = {
       date : new Date(),
-      DateFilterData : []
+      newStartDate : props.customerStartDate,
+      newEndDate : props.customerEndDate
     }
   }
 
-  componentDidMount(){
-        let dateFilter = [];
-        let newStartDate = new Date(this.props.customerStartDate)
-        let newEndDate = new Date(this.props.customerEndDate)
-        this.props.orders.map((v,i)=>{
-          let  billdate = new Date(v.created_on);
-          if(newStartDate < billdate && newEndDate > billdate){
-              dateFilter.push(v)
-              } 
-              this.setState({
-                  DateFilterData : dateFilter
-              })
-              // console.log(DateFilterData)
-        })
-  }
+
+  // componentDidMount(){
+
+    //   this.props.orders.map((v,i)=>{
+    //     let DateFilterData = [];
+    // let slipDate = new Date(v.created_on);
+    //   if(this.state.newStartDate < slipDate && this.state.newEndDate > slipDate){
+    //     DateFilterData.push(v)
+    //     this.setState({
+    //       DateFilterData
+    //     })
+    //     }
+    //     console.log(DateFilterData)    
+    // })
+// }
 
   render(){
     let ProductName = this.props.customerProductName.map((v,i)=>v.name)
     let billDate = new Date(this.props.customerBillCreateDate)
     let customerBillStartDate = new Date(this.props.customerStartDate)
     let customerBillEndDate = new Date(this.props.customerEndDate)
-    const total = this.state.DateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
+    const total = this.props.DateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
     return(
   <Document>
     <Page size="A4" style={{ margin : '10', paddingBottom : 30, paddingTop : 30  }}>
@@ -185,7 +186,7 @@ class MyPdfBill extends Component{
         <Text style={styles.total}>Total</Text>
       </View>
           {
-            this.state.DateFilterData.map((order,index)=>{
+            this.props.DateFilterData.map((order,index)=>{
               
               let d = new Date(order.created_on)
               return(

@@ -16,7 +16,7 @@ class GetSingleSale extends Component {
         this.getSingleOrder();
     }
 
-    getSingleOrder(){
+    getSingleOrder = () => {
         let baseUrl = 'http://18.191.185.248/api/order/detail';
         fetch(baseUrl,{
             method  : 'POST',

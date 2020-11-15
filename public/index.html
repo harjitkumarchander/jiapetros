@@ -62,7 +62,7 @@
   });
   </script>
 
-<script>
+<!-- <script>
   window.onbeforeunload = function (e) {
     window.localStorage.unloadTime = JSON.stringify(new Date());
   };
@@ -74,6 +74,12 @@
     window.localStorage.removeItem("userData");
   }
 };
+</script> -->
+<script>
+  window.onbeforeunload = function(e){
+    localStorage.removeItem('userData');
+    e.preventDefault();
+  }
 </script>
   </body>
 </html>

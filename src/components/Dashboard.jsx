@@ -55,7 +55,7 @@ class Dashboard extends Component {
 
     render() {
         let user = this.state.items.map(item => item.name);
-        let product = this.state.products.map(prod => prod.quanlity);
+        let product = this.state.products.map(prod => prod.quantity);
         return (
             <div className="dashboard left">
                 <Loader loader={!this.state.loader} />

@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: 1200,
     color: "#1a245c",
-    margin: 10  
+    margin: 10
   },
   tableText: {
     margin: 10,
@@ -105,38 +105,21 @@ class BillTo extends Component{
     this.state = {
       date : new Date(),
       access_token : localStorage.getItem('userData'),
-      billPdfData : []
+      billPdfData : props.pdfData
     }
   }
 
-  componentDidMount(){
-    let ApiUrl = 'http://18.191.185.248/api/order/get/pdfs';
-    fetch(ApiUrl,{
-      method : 'POST',
-      body : JSON.stringify(this.state)
-    })
-    .then((res)=>res.json())
-    .then(result=>{
-      console.log(result);
-      this.setState({
-          billPdfData : result.data
-      })
-    })
-    .catch((error)=>{
-        console.log('error', error);
-    })
-  }
-
   render(){
-    let billNo  = this.state.billPdfData.map((v,i)=>v.id[+1])
+    let billNo  = this.state.billPdfData[this.state.billPdfData.length-1].id;
+    console.log(billNo,"bill to comp")
     let startDate=new Date(this.props.startDate)
     let endDate=new Date(this.props.endDate)
     let dt = this.state.date;
-    const total = this.props.dateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
+    const total = this.props.dateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
     return(
   <Document>
     <Page size="A4" style={{ margin : '10', paddingBottom : 30, paddingTop : 30  }}>
-       
+
       <View style={{ flexDirection :'row', alignItems : 'center', height : '20'}}>
         <Text style={{ width : '30%', fontSize : 12, textAlign : 'left'}}>GST No. 03ABTPD4264F1ZT</Text>
         <Text style={{ width : '34%', fontSize : 12, textAlign : 'center'}}>INVOICE</Text>
@@ -156,7 +139,7 @@ class BillTo extends Component{
         <Text style={{ width : '30%', textAlign : 'left', marginBottom : '60'}}>Bill No. {billNo}</Text>
         <Text style={{ width : '63%', textAlign : 'right', marginBottom : '60'}}>Date:{dt.getDate()+"/"+ (dt.getMonth()+1) +"/"+ dt.getFullYear()} </Text>
       </View>
-             
+
 
       <View style={{ alignItems : 'center', height : '20', flexDirection : 'row'}}>
         <Text style={{ width : '30%', textAlign : 'left', fontSize : '20', marginBottom : '60'}}>Bill To</Text>
@@ -176,7 +159,7 @@ class BillTo extends Component{
         <Text style={{marginBottom : '60'}}>To</Text>
         <Text style={{width : '30%', textAlign : 'center', marginRight : '150', marginBottom : '60'}}>{endDate.getDate()+"/"+ (endDate.getMonth()+1) +"/"+ endDate.getFullYear()} </Text>
       </View>
-      
+
       <View style={styles.table}>
       <View style={styles.container}>
         <Text style={styles.date}>Date</Text>
@@ -189,7 +172,7 @@ class BillTo extends Component{
       </View>
           {
             this.props.dateFilterData.map((order,index)=>{
-              
+
               let d = new Date(order.created_on)
               return(
                 <View style={{flexDirection: 'row', fontSize : 8, borderBottomColor: '#bff0fd', borderBottomWidth: 1, alignItems: 'center', height: 24, fontStyle: 'bold',}} key={index} >
@@ -209,16 +192,16 @@ class BillTo extends Component{
           <View style={{flexDirection: 'row', borderBottomColor: '#bff0fd', borderBottomWidth: 1, alignItems: 'right', height: 24, fontSize: 10, fontStyle: 'bold',}}>
             <Text style={{ width: '70%', textAlign: 'left', borderRightColor: borderColor, borderRightWidth: 1, paddingRight: 8,}} >{converter.toWords(total).toUpperCase()}</Text>
             <Text style={{ width: '10%', textAlign: 'center', borderRightColor: borderColor, borderRightWidth: 1, paddingRight: 8,}} >TOTAL</Text>
-            <Text style={{width: '20%', textAlign: 'center', paddingRight: 8,}}>{ Number.parseFloat(total).toFixed(2)}</Text>            
+            <Text style={{width: '20%', textAlign: 'center', paddingRight: 8,}}>{ Number.parseFloat(total).toFixed(2)}</Text>
           </View>
 
         <View>
           <Text style={{ width: '80%', textAlign: 'right', fontSize : '12',marginTop : '20', marginRight: '20' }}>For Jia Petros</Text>
         </View>
 
-    </Page>  
+    </Page>
   </Document>
     );
   }
-} 
+}
 export default BillTo;

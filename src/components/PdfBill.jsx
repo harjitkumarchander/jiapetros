@@ -7,6 +7,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import BillTo from './BillTo';
 
+
+const pathName = Math.random().toString(36).substr(2, 9) + ".pdf";
+
+
 class PdfBill extends Component {
     constructor(props){
         super(props);
@@ -18,7 +22,7 @@ class PdfBill extends Component {
             customer_id : this.props.customer_id,
             start_date : new Date(),
             end_date : new Date(),
-            path : 'test.pdf'
+            path : pathName
         }
         this.handleStartDate = this.handleStartDate.bind(this);
         this.handleEndDate = this.handleEndDate.bind(this);
@@ -63,20 +67,25 @@ class PdfBill extends Component {
     validate=()=>{
         let validated = true
         let {start_date, end_date} = this.state;
-        let startDate = this.state.pdfData.map((v,i)=> new Date(v.start_date))
-        let endDate = this.state.pdfData.map((v,i)=> new Date(v.end_date))
+        // let onlyStart_date =  +start_date.getFullYear() + +(start_date.getMonth() +1) +  +start_date.getDate();
+        let onlyStart_date = new Date(+start_date.getFullYear(),+start_date.getMonth(),+start_date.getDate());
+        let pdfLastData = this.state.pdfData[this.state.pdfData.length-1];
+        let pdfLastDate = pdfLastData.end_date;
+        let pdfinalLastDate = new Date(pdfLastDate)
+        let onlyPdfFinalDate = new Date(+pdfinalLastDate.getFullYear(),+pdfinalLastDate.getMonth(),+pdfinalLastDate.getDate());
+        // let onlyPdfFinalDate = +pdfinalLastDate.getFullYear() + +(pdfinalLastDate.getMonth() +1) + +pdfinalLastDate.getDate();
 
-            if(start_date > end_date){
-                validated = false;
-                toast.error('End Date is not smaller then Start Date');
-            }
-            else if(startDate === start_date && endDate === end_date){
-                validated = false
-                toast.error('This bill already generated download from bill details');
-            }
-            return validated ?
-            toast.success('Submitted Successfully')
-            : null
+        if(start_date > end_date){
+            validated = false;
+            toast.error('End Date is not smaller then Start Date');
+        }
+        else if(onlyPdfFinalDate >= onlyStart_date){
+            validated = false
+            toast.error('This bill already generated download from bill details');
+        }
+        return validated ?
+        toast.success('Submitted Successfully')
+        : null
     }
 
     handleAdd = (e) => {
@@ -95,14 +104,11 @@ class PdfBill extends Component {
         .then((res)=>res.text())
         .then(result=>{
             console.log(result);
-
             let dateFilterData = [];
             this.props.orders.map((v,i)=>{
             let  mydate = new Date(v.created_on);
             if(this.state.start_date < mydate && this.state.end_date > mydate){
             dateFilterData.push(v)
-            console.log(dateFilterData)
-
             }    
         })
         this.setState({
@@ -127,7 +133,7 @@ generatePdf = () => {
     })
     .then((res)=>res.json())
     .then(result=>{
-    //   console.log(result);
+        // console.log(result)
       this.setState({
           pdfData : result.data
       })
@@ -204,7 +210,7 @@ generatePdf = () => {
                                                                productName={this.props.productName}
                                                                startDate={this.state.start_date}
                                                                endDate={this.state.end_date}
-                                                               path="test.pdf"
+                                                               path={this.state.path}
                                                                />} 
                                                             //    fileName="NewBill.pdf"
                                                                >

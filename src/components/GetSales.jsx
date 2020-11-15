@@ -21,7 +21,7 @@ class GetPayments extends Component {
         this.getOrders();
     }
 
-    getOrders(){
+    getOrders = () => {
         fetch("http://18.191.185.248/api/orders",{
             method : 'POST',
             body : JSON.stringify(this.state)

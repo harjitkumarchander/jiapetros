@@ -118,7 +118,7 @@ class GetSingleAccount extends Component {
         this.getCustomerLedger();
     }
 
-    getSingleCustomer(){
+    getSingleCustomer = () => {
         let baseUrl = 'http://18.191.185.248/api/customer/details';
         fetch(baseUrl,{
             method  : 'POST',
@@ -144,7 +144,7 @@ class GetSingleAccount extends Component {
     }
 
 
-    getCustomerLedger(){
+    getCustomerLedger = () => {
         let baseUrl = 'http://18.191.185.248/api/customer/ledger';
         fetch(baseUrl,{
             method  : 'POST',
