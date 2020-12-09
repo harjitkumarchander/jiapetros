@@ -210,8 +210,8 @@ class Sales extends Component {
             <div className="sale">
                 <Topbar />
                 <Sidebar />
-            <div style={{ fontFamily: "Exo", marginBottom : "120px", marginTop : "100px" }}>
-                <div className="customers_main mt-3 mb-5">
+            <div style={{ fontFamily: "Exo", marginTop : "100px" }}>
+                <div className="customers_main mt-3 mb-5" style={{marginBottom : "200px"}} >
                     <div className="row">
                         <div className="d-flex col-md-12 mt-3">
                             <h1 className="d-flex justify-content-start display-4 col-md-6 d-none d-sm-block">Sales</h1>
@@ -322,7 +322,6 @@ class Sales extends Component {
                         </Modal>
                         </form>
                         </div>
-                        {/* <div className="col-md-2 justify-content-center new_sale_btn"><Sales1 /></div> */}
                     </div>
                     </div>
                     <GetSales /> 

@@ -98,6 +98,9 @@ class NewTable extends Component {
                 },()=>{this.toggleLoader()
                 })
             })
+            .catch((error)=>{
+                console.log("error while fetching" , error)
+            })
         }
 
         toggleLoader = () => {
@@ -134,7 +137,7 @@ class NewTable extends Component {
                     {
                         <MUIDataTable
                         
-                            className="pl-0 pr-0"
+                            className="pl-0 pr-0 mb-5"
                             data={items.map(item => {return [item.id,
                                         <Link to={{ pathname : "/customersitem", state : {items : item.id, sales : item.id, payments :item.id, products : item.id} }}>{item.name}</Link>
                                         ,item.address,item.phone,item.email,item.gst_no,item.opening_balance,

@@ -108,7 +108,9 @@ class LedgerTo extends Component{
 
   render(){
       console.log(this.props);
-    let dt = this.state.date;
+      let startDate=new Date(this.props.startDate)
+      let endDate=new Date(this.props.endDate)
+      let dt = this.state.date;
     
     return(
   <Document>
@@ -145,6 +147,12 @@ class LedgerTo extends Component{
 
       <View style={{ alignItems : 'center', height : '20', flexDirection : 'row'}}>
         <Text style={{ width : '100%', textAlign : 'center', fontSize : '15', marginBottom : '60'}}>GST NO : {this.props.gst_no}</Text>
+      </View>
+
+      <View style={{ flexDirection :'row', alignItems : 'center', height : '20', fontSize : '13', marginTop : '10'}}>
+        <Text style={{ width : '30%', textAlign : 'center', marginLeft : '100', marginBottom : '60'}}>{startDate.getDate()+"/"+ (startDate.getMonth()+1) +"/"+ startDate.getFullYear()}</Text>
+        <Text style={{marginBottom : '60'}}>To</Text>
+        <Text style={{width : '30%', textAlign : 'center', marginRight : '150', marginBottom : '60'}}>{endDate.getDate()+"/"+ (endDate.getMonth()+1) +"/"+ endDate.getFullYear()} </Text>
       </View>
       
       <View style={styles.table}>

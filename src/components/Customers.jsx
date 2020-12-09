@@ -62,6 +62,9 @@ class Customers extends Component {
             })
             console.log(res);
         })
+        .catch((error)=>{
+            console.log('Error', error)
+        })
 }
     }
     

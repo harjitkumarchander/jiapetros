@@ -67,13 +67,11 @@ class PdfBill extends Component {
     validate=()=>{
         let validated = true
         let {start_date, end_date} = this.state;
-        // let onlyStart_date =  +start_date.getFullYear() + +(start_date.getMonth() +1) +  +start_date.getDate();
         let onlyStart_date = new Date(+start_date.getFullYear(),+start_date.getMonth(),+start_date.getDate());
         let pdfLastData = this.state.pdfData[this.state.pdfData.length-1];
         let pdfLastDate = pdfLastData.end_date;
         let pdfinalLastDate = new Date(pdfLastDate)
         let onlyPdfFinalDate = new Date(+pdfinalLastDate.getFullYear(),+pdfinalLastDate.getMonth(),+pdfinalLastDate.getDate());
-        // let onlyPdfFinalDate = +pdfinalLastDate.getFullYear() + +(pdfinalLastDate.getMonth() +1) + +pdfinalLastDate.getDate();
 
         if(start_date > end_date){
             validated = false;
@@ -82,6 +80,10 @@ class PdfBill extends Component {
         else if(onlyPdfFinalDate >= onlyStart_date){
             validated = false
             toast.error('This bill already generated download from bill details');
+        }
+        else if(pdfLastDate === ""){
+            validated = false;
+            toast.error('Sale details not found');
         }
         return validated ?
         toast.success('Submitted Successfully')

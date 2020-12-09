@@ -37,7 +37,6 @@ class Topbar extends Component {
       })
     }
 
-
     render() {
       if(this.state.loggedOut){
         return <Redirect to = "/" push={true} />

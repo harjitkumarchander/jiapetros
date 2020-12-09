@@ -85,7 +85,7 @@ class GetProduct extends Component {
     componentDidMount(){
         fetch("http://18.191.185.248/api/products",{
             method : 'POST',
-            body : JSON.stringify(this.state.access_token)
+            body : JSON.stringify(this.state)
         })
         .then(res=>res.json())
         .then(result=>{
@@ -116,7 +116,7 @@ class GetProduct extends Component {
             this.setState({
                 show : false
             })
-            // console.log(result);
+            console.log(result);
         })
         .catch((error)=>{
             console.log("error", error);
@@ -165,7 +165,7 @@ class GetProduct extends Component {
                             <div className="form-group col-md-6">
                             <label style={{fontSize : 20}}>Quantity</label>
                             <InputGroup>
-                            <input className="form-control" type="text" name="quanlity" value={this.state.quantity} placeholder="Quantity" onChange={this.handleChange}/>
+                            <input className="form-control" type="text" name="quantity" value={this.state.quantity} placeholder="Quantity" onChange={this.handleChange}/>
                             </InputGroup>
                             </div>
                             <div className="form-group col-md-6">

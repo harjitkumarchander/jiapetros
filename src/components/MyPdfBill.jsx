@@ -104,33 +104,32 @@ class MyPdfBill extends Component{
     super(props);
     this.state = {
       date : new Date(),
-      newStartDate : props.customerStartDate,
-      newEndDate : props.customerEndDate
+      DateFilterData : []
     }
   }
 
-
-  // componentDidMount(){
-
-    //   this.props.orders.map((v,i)=>{
-    //     let DateFilterData = [];
-    // let slipDate = new Date(v.created_on);
-    //   if(this.state.newStartDate < slipDate && this.state.newEndDate > slipDate){
-    //     DateFilterData.push(v)
-    //     this.setState({
-    //       DateFilterData
-    //     })
-    //     }
-    //     console.log(DateFilterData)    
-    // })
-// }
+  componentDidMount () {
+    let { customerStartDate, customerEndDate } = this.props;
+    console.log(customerStartDate)
+    let filterData = [];
+            this.props.orders.map((v,i)=>{   
+        let slipDate = new Date(v.created_on);
+        if(new Date(customerStartDate) < slipDate && new Date(customerEndDate) > slipDate){
+            filterData.push(v)
+        }
+        this.setState({
+          DateFilterData : filterData
+       })
+        })
+  }
 
   render(){
+    console.log(this.state.DateFilterData)
     let ProductName = this.props.customerProductName.map((v,i)=>v.name)
     let billDate = new Date(this.props.customerBillCreateDate)
     let customerBillStartDate = new Date(this.props.customerStartDate)
     let customerBillEndDate = new Date(this.props.customerEndDate)
-    const total = this.props.DateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
+    let total = this.state.DateFilterData.map((item,i) => item.quantity * item.price).reduce((accumulator, currentValue) => accumulator + currentValue, 0)    
     return(
   <Document>
     <Page size="A4" style={{ margin : '10', paddingBottom : 30, paddingTop : 30  }}>
@@ -176,17 +175,17 @@ class MyPdfBill extends Component{
       </View>
       
       <View style={styles.table}>
-      <View style={styles.container}>
-        <Text style={styles.date}>Date</Text>
-        <Text style={styles.items}>Items</Text>
-        <Text style={styles.vehicle}>Vehicle No</Text>
-        <Text style={styles.slip}>Slip No</Text>
-        <Text style={styles.qty}>Qty</Text>
-        <Text style={styles.rate}>@</Text>
-        <Text style={styles.total}>Total</Text>
-      </View>
+        <View style={styles.container}>
+          <Text style={styles.date}>Date</Text>
+          <Text style={styles.items}>Items</Text>
+          <Text style={styles.vehicle}>Vehicle No</Text>
+          <Text style={styles.slip}>Slip No</Text>
+          <Text style={styles.qty}>Qty</Text>
+          <Text style={styles.rate}>@</Text>
+          <Text style={styles.total}>Total</Text>
+        </View>
           {
-            this.props.DateFilterData.map((order,index)=>{
+            this.state.DateFilterData.map((order,index)=>{
               
               let d = new Date(order.created_on)
               return(

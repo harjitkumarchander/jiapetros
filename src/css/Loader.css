@@ -1,7 +1,7 @@
 .loader-img{
     background: transparent;
     align-items: center;
-    position: absolute;
+    position: fixed;
     top: 40%;
     left: 40%;
     z-index: 1500;

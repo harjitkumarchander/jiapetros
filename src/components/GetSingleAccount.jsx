@@ -211,14 +211,14 @@ class GetSingleAccount extends Component {
             <div className="customer">
             <Topbar />
             <Sidebar />
-        <div style={{fontFamily: "Exo", marginLeft : "230px", marginBottom : "200px"}} >
+        <div style={{fontFamily: "Exo", marginLeft : "230px"}} >
             <div className="container-fluid pl-0 pr-0 dashboard_page" id="main">
                 <div className="row row-offcanvas row-offcanvas-left">
                     <div className="col main pt-3">
                         <div className="d-flex justify-content-between">
                             <h1 className="display-5 d-none d-sm-block">Customer Detail</h1>
                             <button className="btn btn-primary" onClick={this.generateStatement}>Generate Statement</button>
-                            </div>
+                        </div>
                             {!this.state.submitted ?
                         (<div>
                         <form method="post" onSubmit={this.handleSubmit}>
@@ -269,6 +269,8 @@ class GetSingleAccount extends Component {
                                                                name={this.state.details.name} 
                                                                address={this.state.details.address} 
                                                                gst_no={this.state.details.gst_no}
+                                                               startDate={this.state.startDate}
+                                                               endDate={this.state.endDate}
                                                                />} 
                                                                fileName="LedgerAccount.pdf">
                               {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}

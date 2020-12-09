@@ -8,13 +8,12 @@ import Footer from './Footer';
 import '../css/CustomerItem.css';
 import { Link } from 'react-router-dom';
 import PdfBill from './PdfBill';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import MyPdfBill from './MyPdfBill';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const columns1 = ["Order Date", "Item", "Order No", "Quantity", "Price", "Total" ];
 const columns2 = ["Payment Date", "Amount" , "Payment Mode", "Description" ];
 const columns3 = ["Bill Date", "Bill No.", "Start Date", "End Date", "File Name" ];
-
 
 class CustomersItem extends Component {
     constructor(props){
@@ -26,58 +25,26 @@ class CustomersItem extends Component {
             orders : [],
             payments : [],
             pdfData : [],
-            DateFilterData : [],
+            // DateFilterData : [],
             show : false,
             submitted : false,
             items : this.props.location.state,
             customer_id : this.props.location.state.items,
-            sales :this.props.location.state,
+            // sales :this.props.location.state,
             order_id : this.props.location.state.sales,
-            payment :this.props.location.state,
+            // payment :this.props.location.state,
             user_id : this.props.location.state.payments,
-            product :this.props.location.state,
+            // product :this.props.location.state,
             product_id : this.props.location.state.products,
         }
-        this.handleStartDate = this.handleStartDate.bind(this);
-        this.handleEndDate = this.handleEndDate.bind(this);
     }
 
-    handleStartDate(date) {
-        this.setState({
-          start_date: date
-        })
-        console.log(this.state.start_date)
-    }
-
-    handleEndDate(date) {
-        this.setState({
-          end_date: date
-        // },()=>{
-        //   console.log(this.state.endDate > this.state.startDate)
-        //   let checkDate = this.state.endDate > this.state.startDate;
-        //     if(!checkDate){
-        //       alert("hhhhh")
-        //     }
-        })
-        console.log(this.state.end_date)
-    }
-
-
-    addNewSale = () => {
-        this.setState({
-            show : true,
-
-        })
-    }
-
-    handleClose = () => {
-        this.setState({
-            show : false
-        })
-    }
-
-    handleSubmit = (e) => {
-        e.preventDefault()
+    componentDidMount = () => {
+        this.getSingleOrder();
+        this.getSinglePayment();
+        this.getSingleCustomer();
+        this.getSingleProduct();
+        this.getPdf();
     }
 
     getSingleCustomer = () => {
@@ -99,36 +66,20 @@ class CustomersItem extends Component {
         })
     }
 
-    componentDidMount = () => {
-        this.getSingleOrder();
-        this.getSinglePayment();
-        this.getSingleCustomer();
-        this.getSingleProduct();
-        this.getPdf();
-    }
-
-    getFilterData = (pdf,ids) => {
-        let newStartDate = new Date(this.state.pdfData[ids].start_date)
-        let newEndDate = new Date(this.state.pdfData[ids].end_date)
-        let DateFilterData = [];
-        // let newStartDate = this.state.pdfData.map((v,i)=> new Date(v.start_date)[ids])
-        
-        // let newStartDate = this.state.pdfData.map((v,i)=> new Date(v.start_date)[ids])
-        // let newEndDate = this.state.pdfData.map((v,i)=> v.end_date[ids])
-        // console.log(newStartDate)
-        // console.log(ids);
-            this.state.orders.map((v,i)=>{   
-        let slipDate = new Date(v.created_on);
-        if(newStartDate < slipDate && newEndDate > slipDate){
-            DateFilterData.push(v)
-        }
-        })
-        this.setState({
-            DateFilterData : DateFilterData
-         })
-
-         console.log(DateFilterData)
-    }
+    // getFilterData = (pdf,ids) => {
+    //     let newStartDate = new Date(this.state.pdfData.map((v,i)=>v.start_date)[ids])
+    //     let newEndDate = new Date(this.state.pdfData.map((v,i)=>v.end_date)[ids])
+    //     let DateFilterData = [];
+    //         this.state.orders.map((v,i)=>{   
+    //     let slipDate = new Date(v.created_on);
+    //     if(newStartDate < slipDate && newEndDate > slipDate){
+    //         DateFilterData.push(v)
+    //     }
+    //     this.setState({
+    //         DateFilterData
+    //      })
+    //     })
+    // }
 
     getSingleOrder = () => {
         let baseUrl = 'http://18.191.185.248/api/orders';
@@ -174,7 +125,7 @@ class CustomersItem extends Component {
         })
         .then((res)=>res.json())
         .then(result=>{
-          console.log(result);
+        //   console.log(result);
           this.setState({
             pdfData : result.data
             })
@@ -209,6 +160,7 @@ class CustomersItem extends Component {
     }
 
     render() {
+        // console.log(this.state.DateFilterData)
         let productName = this.state.products.map((v,i)=>v.name)
         const { orders, payments, pdfData } = this.state;
         return (
@@ -244,28 +196,13 @@ class CustomersItem extends Component {
                             </ul>
                         </div>
 
-                        <h1 className="display-5 mt-5 d-none d-sm-block">Bill Details</h1>
-                        <Loader loader={!this.state.loader} />
-                        <MUIDataTable 
-                        data={pdfData.map((pdf, i) => {return [pdf.created_on, 
-                                                          <PDFDownloadLink document={<MyPdfBill
-                                                            customerName={this.state.details.name}
-                                                            customerAddress={this.state.details.address}
-                                                            customerGstNo={this.state.details.gst_no}
-                                                            customerBillNo={pdf.id}
-                                                            customerBillCreateDate={pdf.created_on}
-                                                            customerStartDate={pdf.start_date}
-                                                            customerEndDate={pdf.end_date}
-                                                            customerProductName={this.state.products}
-                                                            orders={this.state.orders}
-                                                            DateFilterData={this.state.DateFilterData}
-                                                          />
-                                                        }
-                                                          ><button className="btn btn-secondary" onClick={()=>this.getFilterData(pdf,i)}>{pdf.id}</button>
-                                                          </PDFDownloadLink>, pdf.start_date, pdf.end_date, pdf.path ]})}
-                        columns={columns3}
-                        options={{selectableRows : "none"}}
-                        />
+                        {/* <SavedPdf
+                            pdfData={this.state.pdfData}
+                            orders={this.state.orders}
+                            details={this.state.details}
+                            productName={productName}
+                            customer_id={this.state.customer_id}
+                        /> */}
 
                         <h1 className="display-5 mt-5 d-none d-sm-block">Sale Details</h1>                        
                         <MUIDataTable 
@@ -281,6 +218,31 @@ class CustomersItem extends Component {
                         options={{selectableRows : "none"}}
                         />
 
+                        <h1 className="display-5 mt-5 d-none d-sm-block">Bill Details</h1>
+                        <Loader loader={!this.state.loader} />
+                        <MUIDataTable 
+                        data={pdfData.map((pdf, i) => {return [pdf.created_on, 
+                                                          <PDFDownloadLink document={<MyPdfBill
+                                                            customerName={this.state.details.name}
+                                                            customerAddress={this.state.details.address}
+                                                            customerGstNo={this.state.details.gst_no}
+                                                            customerBillNo={pdf.id}
+                                                            customerBillCreateDate={pdf.created_on}
+                                                            customerStartDate={pdf.start_date}
+                                                            customerEndDate={pdf.end_date}
+                                                            customerProductName={this.state.products}
+                                                            orders={this.state.orders}
+                                                            // DateFilterData={this.state.DateFilterData}
+                                                          />
+                                                        }
+                                                          >
+                                                              {/* <button className="btn btn-secondary" onClick={()=>this.getFilterData(pdf,i)}> */}
+                                                              {pdf.id}
+                                                              {/* </button> */}
+                                                          </PDFDownloadLink>, pdf.start_date, pdf.end_date, pdf.path ]})}
+                        columns={columns3}
+                        options={{selectableRows : "none"}}
+                        />
                         
                         </div>
                     </div>

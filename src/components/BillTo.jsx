@@ -105,12 +105,12 @@ class BillTo extends Component{
     this.state = {
       date : new Date(),
       access_token : localStorage.getItem('userData'),
-      billPdfData : props.pdfData
+      billPdfData : props.pdfData,
     }
   }
 
   render(){
-    let billNo  = this.state.billPdfData[this.state.billPdfData.length-1].id;
+    let billNo  = this.state.billPdfData.length
     console.log(billNo,"bill to comp")
     let startDate=new Date(this.props.startDate)
     let endDate=new Date(this.props.endDate)
